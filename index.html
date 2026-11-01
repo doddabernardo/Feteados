@@ -3,99 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feteados - Distribuidora Mayorista y Minorista</title>
+    <title>Feteados - Distribuidora</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, sans-serif;
+        :root {
+            --bg-primary: #121212;
+            --bg-card: #1e1e1e;
+            --accent: #ff9800;
+            --text-main: #ffffff;
+            --text-sub: #b0b0b0;
+            --green-badge: #2e7d32;
         }
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            padding: 20px;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-primary); color: var(--text-main); padding-bottom: 80px; }
+        
         header {
+            background-color: #1a1a1a;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo-title { font-size: 1.4rem; font-weight: bold; color: var(--accent); }
+        .header-actions { display: flex; gap: 15px; align-items: center; }
+        .btn-icon { background: none; border: none; color: white; font-size: 1.3rem; cursor: pointer; }
+        
+        /* Banner Promocional Local */
+        .promo-banner {
+            background: linear-gradient(90deg, #d32f2f, #f57c00);
+            color: white;
+            padding: 10px 15px;
             text-align: center;
-            margin-bottom: 30px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #fff;
+
+        /* Solapas / Categorías */
+        .categories {
+            display: flex;
+            overflow-x: auto;
+            padding: 15px 10px;
+            gap: 10px;
+            background-color: #181818;
+            border-bottom: 1px solid #2a2a2a;
         }
-        header p {
-            color: #aaa;
-            font-size: 1.1rem;
+        .cat-btn {
+            background-color: #2a2a2a;
+            color: var(--text-sub);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            cursor: pointer;
         }
+        .cat-btn.active {
+            background-color: var(--accent);
+            color: black;
+            font-weight: bold;
+        }
+
+        /* Catálogo de Productos */
         .catalog {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            padding: 15px;
         }
         .card {
-            background-color: #1e1e1e;
-            border-radius: 10px;
+            background-color: var(--bg-card);
+            border-radius: 12px;
             overflow: hidden;
-            border: 1px solid #333;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 1px solid #2c2c2c;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .card img {
             width: 100%;
-            height: 200px;
+            height: 120px;
             object-fit: cover;
+            background-color: #222;
+        }
+        .card-body { padding: 10px; }
+        .card-title { font-size: 1rem; margin-bottom: 5px; }
+        .card-desc { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 10px; }
+        .card-price { font-size: 1.1rem; font-weight: bold; color: #4ade80; margin-bottom: 10px; }
+        .btn-add {
+            width: 100%;
             background-color: #333;
-        }
-        .card-content {
-            padding: 20px;
-        }
-        .card-content h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-        }
-        .card-content p {
-            color: #ccc;
-            font-size: 0.95rem;
-            margin-bottom: 15px;
-        }
-        .price {
-            font-size: 1.2rem;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
             font-weight: bold;
-            color: #4ade80;
+            cursor: pointer;
+        }
+        
+        /* Modal Llave / Editor */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+        .modal-content {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background: #121212;
+            color: white;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        .btn-action {
+            background: var(--accent);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Feteados</h1>
-        <p>Distribuidora Mayorista y Minorista</p>
+        <div class="logo-title">Feteados</div>
+        <div class="header-actions">
+            <button class="btn-icon" onclick="abrirLlave()" title="Modo Editor">🔑</button>
+            <button class="btn-icon" title="Carrito">🛒 <span id="cart-count">0</span></button>
+        </div>
     </header>
 
+    <!-- Banner con descuento del local -->
+    <div class="promo-banner">
+        🔥 <span>9% OFF abonando en efectivo y retirando en local</span>
+    </div>
+
+    <!-- Categorías -->
+    <div class="categories">
+        <button class="cat-btn active" onclick="filtrar('todos')">Todos</button>
+        <button class="cat-btn" onclick="filtrar('quesos')">Quesos</button>
+        <button class="cat-btn" onclick="filtrar('fiambres')">Fiambres</button>
+        <button class="cat-btn" onclick="filtrar('dulces')">Dulces</button>
+        <button class="cat-btn" onclick="filtrar('lacteos')">Lácteos</button>
+    </div>
+
+    <!-- Grilla de Productos -->
     <div class="catalog" id="catalog">
-        <!-- Producto 1 -->
-        <div class="card">
-            <img src="imagen-queso-1.jpg" alt="Queso Feteado">
-            <div class="card-content">
-                <h3>Queso en Barra / Feteado</h3>
-                <p>Calidad superior para distribución comercial y gastronómica.</p>
-                <div class="price">Consultar Stock</div>
+        <div class="card" data-cat="quesos">
+            <img src="https://via.placeholder.com/150/ff9800/ffffff?text=Queso+Barra" alt="Queso Barra">
+            <div class="card-body">
+                <div class="card-title">Queso Barra Tybo</div>
+                <div class="card-desc">Ideal para feteado y sándwiches.</div>
+                <div class="card-price">$ Consultar</div>
+                <button class="btn-add" onclick="agregar()">+ Agregar</button>
             </div>
         </div>
 
-        <!-- Producto 2 -->
-        <div class="card">
-            <img src="imagen-queso-2.jpg" alt="Mozzarella">
-            <div class="card-content">
-                <h3>Mozzarella Especial</h3>
-                <p>Ideal para melting, excelente rendimiento y sabor.</p>
-                <div class="price">Consultar Stock</div>
+        <div class="card" data-cat="quesos">
+            <img src="https://via.placeholder.com/150/ff9800/ffffff?text=Mozzarella" alt="Mozzarella">
+            <div class="card-body">
+                <div class="card-title">Mozzarella Horma</div>
+                <div class="card-desc">Excelente derretimiento.</div>
+                <div class="card-price">$ Consultar</div>
+                <button class="btn-add" onclick="agregar()">+ Agregar</button>
+            </div>
+        </div>
+
+        <div class="card" data-cat="fiambres">
+            <img src="https://via.placeholder.com/150/d32f2f/ffffff?text=Jamón+Cocido" alt="Jamón Cocido">
+            <div class="card-body">
+                <div class="card-title">Jamón Cocido</div>
+                <div class="card-desc">Calidad primera selección.</div>
+                <div class="card-price">$ Consultar</div>
+                <button class="btn-add" onclick="agregar()">+ Agregar</button>
             </div>
         </div>
     </div>
 
+    <!-- Modal de la Llave -->
+    <div class="modal" id="modalKey">
+        <div class="modal-content">
+            <h3>Acceso Administrador</h3>
+            <p style="color: #aaa; font-size: 0.85rem; margin-top: 5px;">Ingresá el PIN para activar el modo editor</p>
+            <input type="password" id="pinInput" placeholder="PIN (ej: 1234)">
+            <button class="btn-action" onclick="validarPIN()">Ingresar</button>
+            <button style="background:none; border:none; color:#888; margin-top:10px; cursor:pointer;" onclick="cerrarLlave()">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = 0;
+        function agregar() {
+            cart++;
+            document.getElementById('cart-count').innerText = cart;
+        }
+
+        function filtrar(categoria) {
+            let btns = document.querySelectorAll('.cat-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            let cards = document.querySelectorAll('.card');
+            cards.forEach(c => {
+                if (categoria === 'todos' || c.getAttribute('data-cat') === categoria) {
+                    c.style.display = 'flex';
+                } else {
+                    c.style.display = 'none';
+                }
+            });
+        }
+
+        function abrirLlave() {
+            document.getElementById('modalKey').style.display = 'flex';
+        }
+        function cerrarLlave() {
+            document.getElementById('modalKey').style.display = 'none';
+        }
+        function validarPIN() {
+            let pin = document.getElementById('pinInput').value;
+            if (pin === '1234') {
+                alert('¡Modo Editor Activado!');
+                cerrarLlave();
+            } else {
+                alert('PIN Incorrecto');
+            }
+        }
+    </script>
 </body>
 </html>
